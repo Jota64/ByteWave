@@ -12,12 +12,6 @@ struct Token {
   int Columna;
 };
 
-
-
-
-
-
-
 bool validaPalabrasClave(const string& Expresion){
     const regex PalabrasClave("\\b(var|if|else|fin|while|endwhile|float|int|bool)\\b"); // palabras reservadas
     return regex_match(Expresion, PalabrasClave);
