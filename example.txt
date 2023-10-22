@@ -1,0 +1,42 @@
+// Este es un programa en ByteWave que realiza algunas operaciones con unidades y sistemas numéricos
+// Se declaran algunas variables con sus tipos y unidades
+var a int m; // a es una variable entera con unidad metro
+var b float km; // b es una variable flotante con unidad kilómetro
+var c bool; // c es una variable booleana sin unidad
+var d string; // d es una variable de cadena de caracteres sin unidad
+
+// Se asignan valores a las variables
+a = 100; // a vale 100 metros
+b = 0.5; // b vale 0.5 kilómetros
+c = true; // c vale verdadero
+d = "ByteWave"; // d vale "ByteWave"
+
+// Se realizan algunas conversiones entre unidades usando la función CONVERTIR
+a = CONVERTIR(a, cm); // a se convierte a centímetros
+b = CONVERTIR(b, m); // b se convierte a metros
+
+// Se muestran los valores de las variables convertidas
+print(a); // imprime 10000
+print(b); // imprime 500
+
+
+// Este es un programa en ByteWave que usa condicionales
+var x int; // se declara una variable entera x
+x = 10; // se asigna el valor 10 a x
+si (x > 0) { // se evalúa si x es mayor que 0
+  print("x es positivo"); // se imprime "x es positivo" si la condición es verdadera
+} sino { // se usa el sino para el caso contrario
+  print("x es negativo o cero"); // se imprime "x es negativo o cero" si la condición es falsa
+}
+
+// Este es un programa en ByteWave que usa repeticiones
+var i int; // se declara una variable entera i
+i = 1; // se asigna el valor 1 a i
+mientras (i <= 10) { // se evalúa si i es menor o igual que 10
+  print(i); // se imprime el valor de i
+  i++; // se incrementa i en uno
+}
+
+para (j = 1; j <= 10; j++) { // se declara una variable j que va desde 1 hasta 10 con paso 1
+  print(j); // se imprime el valor de j
+}
