@@ -55,37 +55,41 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     NUMBER = 258,                  /* NUMBER  */
-    IDENTIFIER = 259,              /* IDENTIFIER  */
-    VAR = 260,                     /* VAR  */
-    INT = 261,                     /* INT  */
-    FLOAT = 262,                   /* FLOAT  */
-    BOOL = 263,                    /* BOOL  */
-    STRING = 264,                  /* STRING  */
-    METER = 265,                   /* METER  */
-    KILOMETER = 266,               /* KILOMETER  */
-    SECOND = 267,                  /* SECOND  */
-    MINUTE = 268,                  /* MINUTE  */
-    HOUR = 269,                    /* HOUR  */
-    KILOGRAM = 270,                /* KILOGRAM  */
-    PLUS = 271,                    /* PLUS  */
-    MINUS = 272,                   /* MINUS  */
-    MULTIPLY = 273,                /* MULTIPLY  */
-    DIVIDE = 274,                  /* DIVIDE  */
-    EQUAL = 275,                   /* EQUAL  */
-    SEMICOLON = 276,               /* SEMICOLON  */
-    IF = 277,                      /* IF  */
-    ELSE = 278,                    /* ELSE  */
-    WHILE = 279,                   /* WHILE  */
-    FOR = 280,                     /* FOR  */
-    LPAREN = 281,                  /* LPAREN  */
-    RPAREN = 282,                  /* RPAREN  */
-    LBRACE = 283,                  /* LBRACE  */
-    RBRACE = 284,                  /* RBRACE  */
-    CONVERTIR = 285,               /* CONVERTIR  */
-    REAL = 286,                    /* REAL  */
-    UNIDAD = 287,                  /* UNIDAD  */
-    RELACIONAL = 288,              /* RELACIONAL  */
-    LOGICO = 289                   /* LOGICO  */
+    REAL = 259,                    /* REAL  */
+    STRING = 260,                  /* STRING  */
+    IDENTIFIER = 261,              /* IDENTIFIER  */
+    VAR = 262,                     /* VAR  */
+    INT = 263,                     /* INT  */
+    FLOAT = 264,                   /* FLOAT  */
+    BOOL = 265,                    /* BOOL  */
+    UNIDAD = 266,                  /* UNIDAD  */
+    PLUS = 267,                    /* PLUS  */
+    MINUS = 268,                   /* MINUS  */
+    MULTIPLY = 269,                /* MULTIPLY  */
+    DIVIDE = 270,                  /* DIVIDE  */
+    RELACIONAL = 271,              /* RELACIONAL  */
+    LOGICO = 272,                  /* LOGICO  */
+    CONVERTIR = 273,               /* CONVERTIR  */
+    ASIGNACION = 274,              /* ASIGNACION  */
+    LPAREN = 275,                  /* LPAREN  */
+    RPAREN = 276,                  /* RPAREN  */
+    LBRACE = 277,                  /* LBRACE  */
+    RBRACE = 278,                  /* RBRACE  */
+    SEMICOLON = 279,               /* SEMICOLON  */
+    PARA = 280,                    /* PARA  */
+    SI = 281,                      /* SI  */
+    SINO = 282,                    /* SINO  */
+    MIENTRAS = 283,                /* MIENTRAS  */
+    PRINT = 284,                   /* PRINT  */
+    LESS_THAN = 285,               /* LESS_THAN  */
+    GREATER_THAN = 286,            /* GREATER_THAN  */
+    LESS_THAN_OR_EQUAL = 287,      /* LESS_THAN_OR_EQUAL  */
+    GREATER_THAN_OR_EQUAL = 288,   /* GREATER_THAN_OR_EQUAL  */
+    NOT_EQUAL = 289,               /* NOT_EQUAL  */
+    LOGICAL_AND = 290,             /* LOGICAL_AND  */
+    LOGICAL_OR = 291,              /* LOGICAL_OR  */
+    LOGICAL_NOT = 292,             /* LOGICAL_NOT  */
+    EQUAL = 293                    /* EQUAL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -94,13 +98,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 6 "parser.y"
+#line 114 "parser.y"
 
-    int num;
-    char *str;
-    float real;
+  int num;
+  float real;
+  char *str;
 
-#line 104 "parser.tab.h"
+#line 108 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
