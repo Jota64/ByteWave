@@ -1,2 +1,4 @@
 #Ignoro la carpeta de output
 output
+*.exe
+.vscode

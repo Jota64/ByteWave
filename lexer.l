@@ -1,6 +1,6 @@
 %{
 
-#include "parser.tab.h" // Archivo de encabezado generado por Bison
+//#include "parser.tab.h" // Archivo de encabezado generado por Bison
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +41,9 @@
 "[" { printf("\n LBRACE (%s)", yytext); }
 "]" { printf("\n RBRACE (%s)", yytext); }
 ";" { printf("\n SEMICOLON (%s)", yytext); }
+"," { printf("\n COMMA (%s)", yytext); }
+"{" { printf("\n LCURLYBR (%s)", yytext); }
+"}" { printf("\n RCURLYBR (%s)", yytext); }
 
 "para"  { printf("\n PARA (%s)", yytext); }
 "si" { printf("\n SI (%s)", yytext); }
@@ -64,6 +67,5 @@
 int main() {
     // Inicializa el analizador léxico
     yylex();
-
     return 0;
 }
