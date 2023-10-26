@@ -4,7 +4,8 @@
 
 ### Definición
 
-    - Definicion del Lenguaje
+    ByteWave tiene como objetivo proporcionar una manera sencilla y eficiente de realizar conversiones entre diferentes unidades de medida. Está diseñado para ser utilizado por cualquier persona que necesite realizar conversiones de manera precisa y rápida, adicionalmente permite realizar algunos cálculos sobre estas cantidades.  
+    
 
 ## Gramática
 
