@@ -1,9 +1,10 @@
 %{
 
-//#include "parser.tab.h" // Archivo de encabezado generado por Bison
+#include "parser.tab.h" // Archivo de encabezado generado por Bison
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 %}
 
@@ -11,50 +12,53 @@
 
 %%
 
-"var"               { printf("\n VAR (%s)", yytext); }
-"int"               { printf("\n INT (%s)", yytext); }
-"float"             { printf("\n FLOAT (%s)", yytext); }
-"bool"              { printf("\n BOOL (%s)", yytext); }
-"string"            { printf("\n STRING (%s)", yytext); }
-(m|km|cm|s|min|h|kg) {  printf("\n UNIDAD (%s)", yytext); }
-"+"  { printf("\n PLUS (%s)", yytext); }
-"-"  { printf("\n MINUS (%s)", yytext); }
-"*"  { printf("\n MULTIPLY (%s)", yytext); }
-"/"  { printf("\n DIVIDE (%s)", yytext); }
-"<"  { printf("\n LESS_THAN (%s)", yytext); }
-">"  { printf("\n GREATER_THAN (%s)", yytext); }
-"<=" { printf("\n LESS_THAN_OR_EQUAL (%s)", yytext); }
-">=" { printf("\n GREATER_THAN_OR_EQUAL (%s)", yytext);  }
-"==" { printf("\n EQUAL (%s)", yytext);  }
-"=" { printf("\n ASIGNACION (%s)", yytext);  }
-"!=" { printf("\n NOT_EQUAL (%s)", yytext);  }
-"&&" { printf("\n LOGICAL_AND (%s)", yytext);  }
-"||" { printf("\n LOGICAL_OR (%s)", yytext);  }
-"!"  { printf("\n LOGICAL_NOT (%s)", yytext);  }
+"var"               { printf("\n VAR (%s)", yytext); return VAR; }
+"int"               { yylval.str = strdup(yytext); return INT; }
+"float"             { yylval.str = strdup(yytext); return FLOAT; }
+"bool"              { yylval.str = strdup(yytext); return BOOL; }
+"string"            { yylval.str = strdup(yytext); return STRING;}
+(m|km|cm|s|min|h|kg|unit) { printf("\n UNIDAD (%s)", yytext); yylval.str = strdup(yytext); return UNIDAD; }
 
-\"([^\\\"]|\\\\.)*\"       {  printf("\n STRING (%s)", yytext); }
+"+"  { printf("\n PLUS (%s)", yytext); return PLUS; }
+"-"  { printf("\n MINUS (%s)", yytext); return MINUS; }
+"*"  { printf("\n MULTIPLY (%s)", yytext); return MULTIPLY; }
+"/"  { printf("\n DIVIDE (%s)", yytext); return DIVIDE;}
+"<"  { printf("\n LESS_THAN (%s)", yytext); return LESS_THAN; }
+">"  { printf("\n GREATER_THAN (%s)", yytext);  return GREATER_THAN; }
+"<=" { printf("\n LESS_THAN_OR_EQUAL (%s)", yytext);  return LESS_THAN_OR_EQUAL;}
+">=" { printf("\n GREATER_THAN_OR_EQUAL (%s)", yytext); return GREATER_THAN_OR_EQUAL;}
+"==" { printf("\n EQUAL (%s)", yytext); return EQUAL; }
+"=" { printf("\n ASIGNACION (%s)", yytext);  return ASIGNACION;}
+"!=" { printf("\n NOT_EQUAL (%s)", yytext);  return NOT_EQUAL; }
+"&&" { printf("\n LOGICAL_AND (%s)", yytext);  return LOGICAL_AND; }
+"||" { printf("\n LOGICAL_OR (%s)", yytext);  return LOGICAL_OR; }
+"!"  { printf("\n LOGICAL_NOT (%s)", yytext);  return LOGICAL_NOT; }
 
-"CONVERTIR"         { printf("\n CONVERTIR (%s)", yytext); }
+\"([^\\\"]|\\\\.)*\"       {  yylval.str = strdup(yytext); return V_STRING; }
 
-"(" { printf("\n LPARENT (%s)", yytext); } // Reconoce el paréntesis izquierdo
-")" { printf("\n RPARENT (%s)", yytext); } // Reconoce el paréntesis derecho
-"[" { printf("\n LBRACE (%s)", yytext); }
-"]" { printf("\n RBRACE (%s)", yytext); }
-";" { printf("\n SEMICOLON (%s)", yytext); }
-"," { printf("\n COMMA (%s)", yytext); }
-"{" { printf("\n LCURLYBR (%s)", yytext); }
-"}" { printf("\n RCURLYBR (%s)", yytext); }
+"CONVERTIR"         { printf("\n CONVERTIR (%s)", yytext);  return CONVERTIR;}
 
-"para"  { printf("\n PARA (%s)", yytext); }
-"si" { printf("\n SI (%s)", yytext); }
-"sino" { printf("\n SINO (%s)", yytext); }
-"mientras" { printf("\n MIENTRAS (%s)", yytext);}
-"print" { printf("\n PRINT (%s)", yytext); }
+"(" { printf("\n LPARENT (%s)", yytext); return LPAREN;} 
+")" { printf("\n RPARENT (%s)", yytext); return RPAREN;}
+";" { printf("\n SEMICOLON (%s) \n", yytext); return SEMICOLON; }
+"," { printf("\n COMMA (%s)", yytext); return COMMA; }
+"{" { printf("\n LCURLYBR (%s)", yytext); return LCURLYBR; }
+"}" { printf("\n RCURLYBR (%s)", yytext); return RCURLYBR; }
 
-[0-9]+\.[0-9]+      {  printf("\n REAL (%s)", yytext); } // Números reales
-[0-9]+              {  printf("\n NUMBER (%s)", yytext); } // Números enteros
+"para"  { printf("\n PARA (%s)", yytext);  return PARA;}
+"si" { printf("\n SI (%s)", yytext); return SI;}
+"sino" { printf("\n SINO (%s)", yytext);  return SINO;}
+"mientras" { printf("\n MIENTRAS (%s)", yytext); return MIENTRAS;}
+"print" { printf("\n PRINT (%s)", yytext);  return PRINT;}
 
-[a-zA-Z][a-zA-Z0-9]* { printf("\n IDENTIFIER (%s)", yytext); }
+[0-9]+\.[0-9]+      {  yylval.valor_real = atoi(yytext); return REAL; } // Números reales
+[0-9]+              {  yylval.valor_entero = atoi(yytext); return NUMBER; } // Números enteros
+
+"true" { yylval.valor_bool = 1; return V_BOOL; } // Reconoce el valor verdadero
+"false" { yylval.valor_bool = 0; return V_BOOL; } // Reconoce el valor falso
+
+
+[a-zA-Z][a-zA-Z0-9]* { printf("\n IDENTIFIER (%s)", yytext); yylval.str = strdup(yytext); return IDENTIFIER; }
 
 "//".*              ; // Comentario de una línea
 "\/\*".*"\*\/"      ; // Comentario multilínea
@@ -63,9 +67,10 @@
 .                   { fprintf(stderr, "Error: Carácter no válido: %s\n", yytext); }
 
 %%
-
+/*
 int main() {
     // Inicializa el analizador léxico
     yylex();
+
     return 0;
-}
+}*/

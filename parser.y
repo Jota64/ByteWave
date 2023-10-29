@@ -1,211 +1,168 @@
-/*
-%{
-#include <stdio.h>
-#include <stdlib.h>
-%}
-
-%union {
-    int num;
-    char *str;
-    float real;
-}
-
-%token <num> NUMBER
-%token <str> IDENTIFIER
-%token VAR INT FLOAT BOOL STRING
-%token METER KILOMETER SECOND MINUTE HOUR KILOGRAM
-%token PLUS MINUS MULTIPLY DIVIDE EQUAL SEMICOLON
-%token IF ELSE WHILE FOR
-%token LPAREN RPAREN LBRACE RBRACE
-%token CONVERTIR
-%token REAL UNIDAD RELACIONAL LOGICO PARA MIENTRAS SI SINO
-
-%left '+' '-'
-%left '*' '/'
-%right '='
-%%
-programa: declaraciones
-        ;
-
-declaraciones: declaracion
-            | declaracion declaraciones
-            ;
-
-declaracion: variable_declaracion
-           | asignacion SEMICOLON
-           | condicional
-           | bucle
-           ;
-
-variable_declaracion: VAR IDENTIFIER tipo_de_dato unidad SEMICOLON
-                   ;
-
-tipo_de_dato: INT
-           | FLOAT
-           | BOOL
-           | STRING
-           ;
-
-unidad: METER
-     | KILOMETER
-     | SECOND
-     | MINUTE
-     | HOUR
-     | KILOGRAM
-     ;
-
-asignacion: IDENTIFIER EQUAL expresion SEMICOLON
-          ;
-
-expresion: expresion_aritmetica
-         | conversion
-         ;
-
-expresion_aritmetica: termino
-                   | expresion_aritmetica PLUS termino
-                   | expresion_aritmetica MINUS termino
-                   ;
-
-termino: factor
-       | termino MULTIPLY factor
-       | termino DIVIDE factor
-       ;
-
-factor: IDENTIFIER
-      | NUMBER
-      | LPAREN expresion_aritmetica RPAREN
-      ;
-
-conversion: CONVERTIR LPAREN expresion_aritmetica ',' unidad RPAREN
-          ;
-
-condicional: IF LPAREN expresion RPAREN bloque ELSE bloque
-           | IF LPAREN expresion RPAREN bloque
-           ;
-
-bloque: LBRACE declaraciones RBRACE
-      ;
-
-bucle: WHILE LPAREN expresion RPAREN bloque
-     | FOR LPAREN asignacion SEMICOLON expresion SEMICOLON asignacion RPAREN bloque
-     ;
-
-%%
-int main() {
-    yyparse();
-    return 0;
-}
-
-void yyerror(const char *s) {
-    fprintf(stderr, "Error: %s\n", s);
-}
-*/
 %{
 
-#include "tokens.h" // Archivo de encabezado generado por flex
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 void yyerror(const char *s);
 int yylex(void);
-
 %}
 
+%left PLUS
+%left MINUS
+%left DIVIDE
+%left MULTIPLY 
+%right ASIGNACION
+
 %union {
-  int num;
-  float real;
+  int valor_entero;
+  float valor_real;
   char *str;
+  int valor_bool;
+  
 }
 
-%token <num> NUMBER
-%token <real> REAL
-%token <str> STRING IDENTIFIER
+//para valores
+%token <valor_entero> NUMBER
+%token <valor_real> REAL
+%token <valor_bool> V_BOOL
+%token <str> V_STRING IDENTIFIER
 
-%token VAR INT FLOAT BOOL UNIDAD
-%token PLUS MINUS MULTIPLY DIVIDE
-%token RELACIONAL LOGICO
-%token CONVERTIR ASIGNACION
-%token LPAREN RPAREN LBRACE RBRACE SEMICOLON
+%token VAR 
+%token LPAREN RPAREN LCURLYBR RCURLYBR SEMICOLON
 %token PARA SI SINO MIENTRAS PRINT
-%token LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL NOT_EQUAL LOGICAL_AND LOGICAL_OR LOGICAL_NOT EQUAL
+%token LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL
+%token NOT_EQUAL LOGICAL_AND LOGICAL_OR LOGICAL_NOT EQUAL
+%token COMMA CONVERTIR
+%token<str> UNIDAD INT FLOAT BOOL STRING
 
 
-%type <num> expr_int
-%type <real> expr_real
-%type <str> expr_str expr_id
+%type <valor_entero> expr_int
+%type <valor_real> expr_float
+%type <valor_bool> expr_bool
+%type <str> expr_string expr_id type 
 
 %%
 
-program: /* empty */
-       | program statement SEMICOLON
-       ;
+program:
+    statements
+    ;
 
-statement: var_decl
-         | assign_stmt
-         | print_stmt
-         | if_stmt
-         | while_stmt
-         | for_stmt
-         | convert_stmt
-         ;
+statements:
+    statement
+    | statements statement
+    | statements increment_statement
+    | statements for_statement
+    ;
 
-var_decl: VAR IDENTIFIER type
-        ;
+statement:
+    var_declaration
+    | assignment_statement
+    | print_statement
+    | if_statement
+    | while_statement
+    ;
 
-type: INT
+var_declaration:
+    VAR IDENTIFIER type UNIDAD SEMICOLON 
+    { printf("Declaración de variable: %s - tipo  %s - unidad %s\n", $2, $3, $4 ? $4: "sin unidad"); }
+    
+    ;
+
+type:
+    INT
     | FLOAT
     | BOOL
     | STRING
     ;
 
-assign_stmt: IDENTIFIER '=' expr
-           ;
+assignment_statement:
+    IDENTIFIER ASIGNACION expr_int SEMICOLON 
+    { printf("Asignacion de variable: %s igual %i \n", $1, $3); }
+    
+    | IDENTIFIER ASIGNACION expr_float SEMICOLON
+        { printf("Asignacion de variable: %s igual %f \n", $1, $3); }
 
-expr: expr_int 
-    | expr_real 
-    | expr_str 
-    | expr_id 
+    | IDENTIFIER ASIGNACION expr_string SEMICOLON
+        { printf("Asignacion de variable: %s igual %s \n", $1, $3); }
+
+    | IDENTIFIER ASIGNACION expr_bool SEMICOLON
+        { printf("Asignacion de variable: %s igual %i \n", $1, $3); }
+    ;
+expr_int:
+    NUMBER
+    ;
+expr_float :
+    REAL
+    ;
+expr_string :
+    V_STRING
+    ;
+expr_bool :
+    V_BOOL
     ;
 
-expr_int: NUMBER 
-        | expr_int PLUS expr_int 
-        | expr_int MINUS expr_int 
-        | expr_int MULTIPLY expr_int 
-        | expr_int DIVIDE expr_int 
-        ;
+printable:
+    expr
+    | V_STRING
+    ;
 
-expr_real: REAL 
-         | expr_real PLUS expr_real 
-         | expr_real MINUS expr_real 
-         | expr_real MULTIPLY expr_real 
-         | expr_real DIVIDE expr_real 
-         ;
+print_statement:
+    PRINT LPAREN printable RPAREN SEMICOLON
+    {
+        printf("Instrucción de impresión\n");
+    }
+    ;
 
-expr_str: STRING 
-       | expr_str PLUS expr_str 
-       ;
+if_statement:
+    SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR
+    | SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR SINO LCURLYBR statements RCURLYBR
+    ;
 
-expr_id: IDENTIFIER 
-       ;
+while_statement:
+    MIENTRAS LPAREN expr RPAREN LCURLYBR statements RCURLYBR
+    ;
 
-print_stmt: PRINT LPAREN expr RPAREN
-          ;
+//hasta aqui bien. | expr CONVERTIR type 
+expr:
+    expr PLUS expr { printf("suma\n"); }
+    | expr MINUS expr { printf("resta\n"); }
+    | expr MULTIPLY expr { printf("multiplicacion\n"); }
+    | expr DIVIDE expr { printf("division\n"); }
+    | expr ASIGNACION expr  { printf("asignacion\n"); }
+    | expr LESS_THAN expr { printf("menor-que\n"); }
+    | expr GREATER_THAN expr { printf("expresion (mayor-que)\n"); }
+    | expr LESS_THAN_OR_EQUAL expr { printf("menor_igual\n"); }
+    | expr GREATER_THAN_OR_EQUAL expr { printf("mayor_igual\n"); }
+    | expr NOT_EQUAL expr { printf("diferente_a\n"); }
+    | expr LOGICAL_AND expr { printf("and\n"); }
+    | expr LOGICAL_OR expr { printf("or\n"); }
+    | expr LOGICAL_NOT { printf("not\n"); }
+    | CONVERTIR LPAREN expr_id COMMA UNIDAD RPAREN 
+    { printf("Conversión de unidad: %s a %s\n", $3, $5); }
+    | LPAREN expr RPAREN
+    | expr_id
+    | NUMBER
+    | REAL
+    | STRING
+    | PRINT LPAREN expr RPAREN { printf("Instrucción de impresión\n"); }
+    ;
 
-if_stmt: SI LPAREN cond RPAREN LBRACE program RBRACE SINO LBRACE program RBRACE
-       ;
-
-while_stmt: MIENTRAS LPAREN cond RPAREN LBRACE program RBRACE
-          ;
-
-for_stmt: PARA LPAREN assign_stmt SEMICOLON cond SEMICOLON assign_stmt RPAREN LBRACE program RBRACE
-        ;
-
-convert_stmt: CONVERTIR LPAREN IDENTIFIER ',' UNIDAD ',' UNIDAD RPAREN
-            ;
-
-cond: expr RELACIONAL expr 
-    | cond LOGICO cond 
-    | LOGICO cond 
+expr_id:
+    IDENTIFIER
+    ;
+increment_statement:
+    IDENTIFIER PLUS PLUS SEMICOLON
+    {
+        printf("Instrucción de incremento: %s\n", $1);
+    }
+    ;
+for_statement:
+    PARA LPAREN assignment_statement SEMICOLON expr SEMICOLON increment_statement RPAREN LCURLYBR statements RCURLYBR
+    {
+        printf("Instrucción PARA con inicialización, condición y actualización\n");
+    }
     ;
 
 %%

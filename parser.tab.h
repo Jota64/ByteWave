@@ -54,42 +54,43 @@ extern int yydebug;
     YYEOF = 0,                     /* "end of file"  */
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
-    NUMBER = 258,                  /* NUMBER  */
-    REAL = 259,                    /* REAL  */
-    STRING = 260,                  /* STRING  */
-    IDENTIFIER = 261,              /* IDENTIFIER  */
-    VAR = 262,                     /* VAR  */
-    INT = 263,                     /* INT  */
-    FLOAT = 264,                   /* FLOAT  */
-    BOOL = 265,                    /* BOOL  */
-    UNIDAD = 266,                  /* UNIDAD  */
-    PLUS = 267,                    /* PLUS  */
-    MINUS = 268,                   /* MINUS  */
-    MULTIPLY = 269,                /* MULTIPLY  */
-    DIVIDE = 270,                  /* DIVIDE  */
-    RELACIONAL = 271,              /* RELACIONAL  */
-    LOGICO = 272,                  /* LOGICO  */
-    CONVERTIR = 273,               /* CONVERTIR  */
-    ASIGNACION = 274,              /* ASIGNACION  */
-    LPAREN = 275,                  /* LPAREN  */
-    RPAREN = 276,                  /* RPAREN  */
-    LBRACE = 277,                  /* LBRACE  */
-    RBRACE = 278,                  /* RBRACE  */
-    SEMICOLON = 279,               /* SEMICOLON  */
-    PARA = 280,                    /* PARA  */
-    SI = 281,                      /* SI  */
-    SINO = 282,                    /* SINO  */
-    MIENTRAS = 283,                /* MIENTRAS  */
-    PRINT = 284,                   /* PRINT  */
-    LESS_THAN = 285,               /* LESS_THAN  */
-    GREATER_THAN = 286,            /* GREATER_THAN  */
-    LESS_THAN_OR_EQUAL = 287,      /* LESS_THAN_OR_EQUAL  */
-    GREATER_THAN_OR_EQUAL = 288,   /* GREATER_THAN_OR_EQUAL  */
-    NOT_EQUAL = 289,               /* NOT_EQUAL  */
-    LOGICAL_AND = 290,             /* LOGICAL_AND  */
-    LOGICAL_OR = 291,              /* LOGICAL_OR  */
-    LOGICAL_NOT = 292,             /* LOGICAL_NOT  */
-    EQUAL = 293                    /* EQUAL  */
+    PLUS = 258,                    /* PLUS  */
+    MINUS = 259,                   /* MINUS  */
+    DIVIDE = 260,                  /* DIVIDE  */
+    MULTIPLY = 261,                /* MULTIPLY  */
+    ASIGNACION = 262,              /* ASIGNACION  */
+    NUMBER = 263,                  /* NUMBER  */
+    REAL = 264,                    /* REAL  */
+    V_BOOL = 265,                  /* V_BOOL  */
+    V_STRING = 266,                /* V_STRING  */
+    IDENTIFIER = 267,              /* IDENTIFIER  */
+    VAR = 268,                     /* VAR  */
+    LPAREN = 269,                  /* LPAREN  */
+    RPAREN = 270,                  /* RPAREN  */
+    LCURLYBR = 271,                /* LCURLYBR  */
+    RCURLYBR = 272,                /* RCURLYBR  */
+    SEMICOLON = 273,               /* SEMICOLON  */
+    PARA = 274,                    /* PARA  */
+    SI = 275,                      /* SI  */
+    SINO = 276,                    /* SINO  */
+    MIENTRAS = 277,                /* MIENTRAS  */
+    PRINT = 278,                   /* PRINT  */
+    LESS_THAN = 279,               /* LESS_THAN  */
+    GREATER_THAN = 280,            /* GREATER_THAN  */
+    LESS_THAN_OR_EQUAL = 281,      /* LESS_THAN_OR_EQUAL  */
+    GREATER_THAN_OR_EQUAL = 282,   /* GREATER_THAN_OR_EQUAL  */
+    NOT_EQUAL = 283,               /* NOT_EQUAL  */
+    LOGICAL_AND = 284,             /* LOGICAL_AND  */
+    LOGICAL_OR = 285,              /* LOGICAL_OR  */
+    LOGICAL_NOT = 286,             /* LOGICAL_NOT  */
+    EQUAL = 287,                   /* EQUAL  */
+    COMMA = 288,                   /* COMMA  */
+    CONVERTIR = 289,               /* CONVERTIR  */
+    UNIDAD = 290,                  /* UNIDAD  */
+    INT = 291,                     /* INT  */
+    FLOAT = 292,                   /* FLOAT  */
+    BOOL = 293,                    /* BOOL  */
+    STRING = 294                   /* STRING  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -98,13 +99,15 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 114 "parser.y"
+#line 18 "parser.y"
 
-  int num;
-  float real;
+  int valor_entero;
+  float valor_real;
   char *str;
+  int valor_bool;
+  
 
-#line 108 "parser.tab.h"
+#line 111 "parser.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
