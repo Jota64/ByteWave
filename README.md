@@ -42,7 +42,9 @@ o
 Get-Content example.txt | .\lexer.exe
 ```
 ### Analizador Sintactico
+```
 flex lexer.l                     
 bison -d parser.y                
 gcc parser.tab.c lex.yy.c -o byte
-./byte <example.txt     
+./byte <example.txt
+``` 
