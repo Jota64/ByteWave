@@ -2,8 +2,8 @@
 // Se declaran algunas variables con sus tipos y unidades
 var a int m; // a es una variable entera con unidad metro
 var b float km; // b es una variable flotante con unidad kilómetro
-var c bool; // c es una variable booleana sin unidad
-var d string; // d es una variable de cadena de caracteres sin unidad
+var c bool unit; // c es una variable booleana sin unidad (para declarar variables sin unidad ponemos unit)
+var d string unit; // d es una variable de cadena de caracteres sin unidad 
 
 // Se asignan valores a las variables
 a = 100; // a vale 100 metros
@@ -12,8 +12,8 @@ c = true; // c vale verdadero
 d = "ByteWave"; // d vale "ByteWave"
 
 // Se realizan algunas conversiones entre unidades usando la función CONVERTIR
-a = CONVERTIR(a, cm); // a se convierte a centímetros
-b = CONVERTIR(b, m); // b se convierte a metros
+//a = CONVERTIR(a, cm); // a se convierte a centímetros
+//b = CONVERTIR(b, m); // b se convierte a metros
 
 // Se muestran los valores de las variables convertidas
 print(a); // imprime 10000
@@ -21,7 +21,7 @@ print(b); // imprime 500
 
 
 // Este es un programa en ByteWave que usa condicionales
-var x int; // se declara una variable entera x
+var x int unit; // se declara una variable entera x
 x = 10; // se asigna el valor 10 a x
 si (x > 0) { // se evalúa si x es mayor que 0
   print("x es positivo"); // se imprime "x es positivo" si la condición es verdadera
@@ -30,13 +30,13 @@ si (x > 0) { // se evalúa si x es mayor que 0
 }
 
 // Este es un programa en ByteWave que usa repeticiones
-var i int; // se declara una variable entera i
+var i int unit; // se declara una variable entera i
 i = 1; // se asigna el valor 1 a i
 mientras (i <= 10) { // se evalúa si i es menor o igual que 10
   print(i); // se imprime el valor de i
   i++; // se incrementa i en uno
 }
 
-para (j = 1; j <= 10; j++) { // se declara una variable j que va desde 1 hasta 10 con paso 1
-  print(j); // se imprime el valor de j
-}
+//para (j = 1; j <= 10; j++) { // se declara una variable j que va desde 1 hasta 10 con paso 1
+//  print(j); // se imprime el valor de j
+//}
