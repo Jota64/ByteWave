@@ -4,13 +4,14 @@ var a int m; // a es una variable entera con unidad metro
 var b float km; // b es una variable flotante con unidad kilómetro
 var c bool unit; // c es una variable booleana sin unidad (para declarar variables sin unidad ponemos unit)
 var d string unit; // d es una variable de cadena de caracteres sin unidad 
-var c string m; // a es una variable entera con unidad metro
+//var c string m; // a es una variable entera con unidad metro
 
 // Se asignan valores a las variables
 a = 100; // a vale 100 metros
 b = 0.5; // b vale 0.5 kilómetros
 c = true; // c vale verdadero
 d = "ByteWave"; // d vale "ByteWave"
+a = 10.1/1.1;
 
 // Se realizan algunas conversiones entre unidades usando la función CONVERTIR
 //a = CONVERTIR(a, cm); // a se convierte a centímetros

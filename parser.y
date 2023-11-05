@@ -89,12 +89,17 @@ statement:
     | print_statement
     | if_statement
     | while_statement
+    | plus_statement
+    | minus_statement
+    | multiply_statement
+    | divide_statement
     ;
 
 var_declaration:
     VAR IDENTIFIER type UNIDAD SEMICOLON 
     { 
         int index = findSymbol($2);
+        printf("index: %i\n",index);
         if(index == -1){
             if(symbolCount<MAX_SYMBOLS){
                 symbolTable[symbolCount].name = strdup($2);
@@ -126,7 +131,7 @@ assignment_statement:
     IDENTIFIER ASIGNACION expr_int SEMICOLON 
     { 
         int index = findSymbol($1);
-        printf("index: %i",index);
+        printf("index: %i\n",index);
         if(index == -1){
             if(symbolCount<MAX_SYMBOLS){
                 symbolTable[symbolCount].name = strdup($1);
@@ -146,7 +151,7 @@ assignment_statement:
     | IDENTIFIER ASIGNACION expr_float SEMICOLON
         { 
             int index = findSymbol($1);
-            printf("index: %i",index);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -166,7 +171,7 @@ assignment_statement:
     | IDENTIFIER ASIGNACION expr_string SEMICOLON
         { 
             int index = findSymbol($1);
-            printf("index: %i",index);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -186,7 +191,7 @@ assignment_statement:
     | IDENTIFIER ASIGNACION expr_bool SEMICOLON
         { 
             int index = findSymbol($1);
-                    printf("index: %i",index);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -236,6 +241,62 @@ if_statement:
 while_statement:
     MIENTRAS LPAREN expr RPAREN LCURLYBR statements RCURLYBR
     ;
+
+plus_statement:
+    IDENTIFIER ASIGNACION expr_int PLUS expr_int SEMICOLON {
+        printf("suma: %i\n", $3+$5);
+    }
+    | IDENTIFIER ASIGNACION expr_int PLUS expr_float SEMICOLON {
+        printf("suma: %f\n", $3+$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float PLUS expr_int SEMICOLON {
+        printf("suma: %f\n", $3+$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float PLUS expr_float SEMICOLON {
+        printf("suma: %f\n", $3+$5);
+    }
+
+minus_statement:
+    IDENTIFIER ASIGNACION expr_int MINUS expr_int SEMICOLON {
+        printf("resta: %i\n", $3-$5);
+    }
+    | IDENTIFIER ASIGNACION expr_int MINUS expr_float SEMICOLON {
+        printf("resta: %f\n", $3-$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float MINUS expr_int SEMICOLON {
+        printf("resta: %f\n", $3-$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float MINUS expr_float SEMICOLON {
+        printf("resta: %f\n", $3-$5);
+    }
+
+multiply_statement:
+    IDENTIFIER ASIGNACION expr_int MULTIPLY expr_int SEMICOLON {
+        printf("multiplicacion: %i\n", $3*$5);
+    }
+    | IDENTIFIER ASIGNACION expr_int MULTIPLY expr_float SEMICOLON {
+        printf("multiplicacion: %f\n", $3*$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float MULTIPLY expr_int SEMICOLON {
+        printf("multiplicacion: %f\n", $3*$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float MULTIPLY expr_float SEMICOLON {
+        printf("multiplicacion: %f\n", $3*$5);
+    }   
+
+divide_statement:
+    IDENTIFIER ASIGNACION expr_int DIVIDE expr_int SEMICOLON {
+        printf("division: %i\n", $3/$5);
+    }
+    | IDENTIFIER ASIGNACION expr_int DIVIDE expr_float SEMICOLON {
+        printf("division: %f\n", $3/$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float DIVIDE expr_int SEMICOLON {
+        printf("division: %f\n", $3/$5);
+    }
+    | IDENTIFIER ASIGNACION expr_float DIVIDE expr_float SEMICOLON {
+        printf("division: %f\n", $3/$5);
+    }  
 
 //hasta aqui bien. | expr CONVERTIR type 
 expr:
