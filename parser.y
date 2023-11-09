@@ -7,13 +7,19 @@
 
 void yyerror(const char *s);
 int yylex(void);
+
+
 %}
 
-%left PLUS
-%left MINUS
-%left DIVIDE
-%left MULTIPLY 
+%left PLUS MINUS
+%left MULTIPLY DIVIDE
 %right ASIGNACION
+%nonassoc LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL
+%nonassoc NOT_EQUAL
+%left LOGICAL_AND
+%left LOGICAL_OR
+%right LOGICAL_NOT
+%nonassoc EQUAL
 
 %union {
   int valor_entero;
@@ -32,8 +38,6 @@ int yylex(void);
 %token VAR 
 %token LPAREN RPAREN LCURLYBR RCURLYBR SEMICOLON
 %token PARA SI SINO MIENTRAS PRINT
-%token LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL
-%token NOT_EQUAL LOGICAL_AND LOGICAL_OR LOGICAL_NOT EQUAL
 %token COMMA CONVERTIR
 %token<str> UNIDAD INT FLOAT BOOL STRING
 
@@ -42,6 +46,7 @@ int yylex(void);
 %type <valor_real> expr_float
 %type <valor_bool> expr_bool
 %type <str> expr_string expr_id type 
+
 
 %%
 
@@ -89,6 +94,11 @@ assignment_statement:
 
     | IDENTIFIER ASIGNACION expr_bool SEMICOLON
         { printf("Asignacion de variable: %s igual %i \n", $1, $3); }
+    | IDENTIFIER ASIGNACION CONVERTIR LPAREN expr COMMA UNIDAD RPAREN SEMICOLON
+    { printf("Conversión de unidad: %s a %s\n", $1, $7); } ;
+
+    
+
     ;
 expr_int:
     NUMBER
@@ -106,6 +116,7 @@ expr_bool :
 printable:
     expr
     | V_STRING
+   
     ;
 
 print_statement:
@@ -124,9 +135,14 @@ while_statement:
     MIENTRAS LPAREN expr RPAREN LCURLYBR statements RCURLYBR
     ;
 
+//conversion_statement:
+ 
+
+
+
 //hasta aqui bien. | expr CONVERTIR type 
 expr:
-    expr PLUS expr { printf("suma\n"); }
+     expr_int PLUS expr_int SEMICOLON { printf("suma\n"); }
     | expr MINUS expr { printf("resta\n"); }
     | expr MULTIPLY expr { printf("multiplicacion\n"); }
     | expr DIVIDE expr { printf("division\n"); }
@@ -139,8 +155,7 @@ expr:
     | expr LOGICAL_AND expr { printf("and\n"); }
     | expr LOGICAL_OR expr { printf("or\n"); }
     | expr LOGICAL_NOT { printf("not\n"); }
-    | CONVERTIR LPAREN expr_id COMMA UNIDAD RPAREN 
-    { printf("Conversión de unidad: %s a %s\n", $3, $5); }
+ 
     | LPAREN expr RPAREN
     | expr_id
     | NUMBER
@@ -158,12 +173,26 @@ increment_statement:
         printf("Instrucción de incremento: %s\n", $1);
     }
     ;
+
 for_statement:
-    PARA LPAREN assignment_statement SEMICOLON expr SEMICOLON increment_statement RPAREN LCURLYBR statements RCURLYBR
+    PARA LPAREN for_init SEMICOLON for_condition SEMICOLON for_update RPAREN LCURLYBR statements RCURLYBR
     {
         printf("Instrucción PARA con inicialización, condición y actualización\n");
     }
     ;
+
+for_init:
+    assignment_statement
+    ;
+
+for_condition:
+    expr
+    ;
+
+for_update:
+    increment_statement
+    ;
+
 
 %%
 
@@ -172,6 +201,7 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
+  
   yyparse();
   return 0;
 }
