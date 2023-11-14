@@ -14,11 +14,12 @@ struct SymbolEntry {
     union {
         int valor_entero;
         float valor_real;
-        char* str;
+        char *str;
         int valor_bool;
     } value;
     char *unit;
 };
+
 
 #define MAX_SYMBOLS 100
 struct SymbolEntry symbolTable[MAX_SYMBOLS];
@@ -33,18 +34,13 @@ int findSymbol(char *name) {
     return -1; // La variable no existe en la tabla de símbolos.
 }
 
-
 %}
 
-%left PLUS MINUS
-%left MULTIPLY DIVIDE
+%left PLUS
+%left MINUS
+%left DIVIDE
+%left MULTIPLY 
 %right ASIGNACION
-%nonassoc LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL
-%nonassoc NOT_EQUAL
-%left LOGICAL_AND
-%left LOGICAL_OR
-%right LOGICAL_NOT
-%nonassoc EQUAL
 
 %union {
   int valor_entero;
@@ -63,6 +59,8 @@ int findSymbol(char *name) {
 %token VAR 
 %token LPAREN RPAREN LCURLYBR RCURLYBR SEMICOLON
 %token PARA SI SINO MIENTRAS PRINT
+%token LESS_THAN GREATER_THAN LESS_THAN_OR_EQUAL GREATER_THAN_OR_EQUAL
+%token NOT_EQUAL LOGICAL_AND LOGICAL_OR LOGICAL_NOT EQUAL
 %token COMMA CONVERTIR
 %token<str> UNIDAD INT FLOAT BOOL STRING
 
@@ -71,7 +69,6 @@ int findSymbol(char *name) {
 %type <valor_real> expr_float
 %type <valor_bool> expr_bool
 %type <str> expr_string expr_id type 
-
 
 %%
 
@@ -118,7 +115,9 @@ var_declaration:
             exit(1);
         }
         printf("Declaración de variable: %s - tipo  %s - unidad %s\n", $2, $3, $4 ? $4: "sin unidad"); 
+
     }
+    
     ;
 
 type:
@@ -127,7 +126,6 @@ type:
     | BOOL
     | STRING
     ;
-    
 
 assignment_statement:
     IDENTIFIER ASIGNACION expr_int SEMICOLON 
@@ -137,7 +135,7 @@ assignment_statement:
         if(index == -1){
             if(symbolCount<MAX_SYMBOLS){
                 symbolTable[symbolCount].name = strdup($1);
-                symbolTable[symbolCount].type = "int";
+                symbolTable[symbolCount].type = "INT";
                 symbolTable[symbolCount].value.valor_entero = $3;
                 symbolCount++;
             } else {
@@ -145,7 +143,7 @@ assignment_statement:
                 exit(1);
             }
         } else {
-            symbolTable[index].value.valor_entero = $3;
+            symbolTable[symbolCount].value.valor_entero = $3;
         }
         printf("Asignacion de variable: %s igual %i \n", $1, $3); 
     }
@@ -157,7 +155,7 @@ assignment_statement:
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
-                    symbolTable[symbolCount].type = "float";
+                    symbolTable[symbolCount].type = "FLOAT";
                     symbolTable[symbolCount].value.valor_real = $3;
                     symbolCount++;
                 } else {
@@ -165,7 +163,7 @@ assignment_statement:
                     exit(1);
                 }
             } else {
-                symbolTable[index].value.valor_real = $3;
+                symbolTable[symbolCount].value.valor_real = $3;
             }
             printf("Asignacion de variable: %s igual %f \n", $1, $3); 
         }
@@ -177,7 +175,7 @@ assignment_statement:
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
-                    symbolTable[symbolCount].type = "string";
+                    symbolTable[symbolCount].type = "STRING";
                     symbolTable[symbolCount].value.str = $3;
                     symbolCount++;
                 } else {
@@ -185,7 +183,7 @@ assignment_statement:
                     exit(1);
                 }
             } else {
-                symbolTable[index].value.str = $3;
+                symbolTable[symbolCount].value.str = $3;
             }
             printf("Asignacion de variable: %s igual %s \n", $1, $3); 
         }
@@ -197,7 +195,7 @@ assignment_statement:
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
-                    symbolTable[symbolCount].type = "bool";
+                    symbolTable[symbolCount].type = "BOOL";
                     symbolTable[symbolCount].value.valor_bool = $3;
                     symbolCount++;
                 } else {
@@ -205,36 +203,11 @@ assignment_statement:
                     exit(1);
                 }
             } else {
-                symbolTable[index].value.valor_bool = $3;
+                symbolTable[symbolCount].value.valor_bool = $3;
             }
             printf("Asignacion de variable: %s igual %i \n", $1, $3);
         }
-    | IDENTIFIER ASIGNACION CONVERTIR LPAREN IDENTIFIER COMMA UNIDAD RPAREN SEMICOLON
-    {
-        int index = findSymbol($1);
-        printf("index: %i\n",index);
-        if(index > -1){
-            char* tipo = symbolTable[index].type;
-            printf("Tipo variable: %s\n", tipo);
-            if(strcmp(tipo,"int") == 0){
-                int value = symbolTable[index].value.valor_entero;
-                printf("Valor variable: %i\n", value);
-            }
-        }
-        int index2 = findSymbol($5);
-        printf("index: %i\n",index2);
-        if(index2 > -1){
-            char* tipo = symbolTable[index2].type;
-            printf("Tipo variable: %s\n", tipo);
-            if(strcmp(tipo,"int") == 0){
-                int value = symbolTable[index2].value.valor_entero;
-                printf("Valor variable: %i\n", value);
-            }
-        }
-        printf("Conversión de unidad: %s a %s\n", $1, $7); 
-    } 
     ;
-
 expr_int:
     NUMBER {$$ = $1}
     ;
@@ -248,39 +221,15 @@ expr_bool :
     V_BOOL {$$ = $1}
     ;
 
+printable:
+    expr
+    | V_STRING
+    ;
+
 print_statement:
-    PRINT LPAREN IDENTIFIER RPAREN SEMICOLON
+    PRINT LPAREN printable RPAREN SEMICOLON
     {
-        int index = findSymbol($3);
-        printf("index: %i\n",index);
-        if(index == -1){
-            yyerror("La variable no se encuentra declarada");
-            exit(1);
-        }else{
-            char* tipo = symbolTable[index].type;
-            printf("Tipo variable: %s\n", tipo);
-            if(strcmp(tipo,"int") == 0){
-                int value = symbolTable[index].value.valor_entero;
-                printf("Valor variable: %i\n", value);
-            }
-            if(strcmp(tipo,"float") == 0){
-                float value = symbolTable[index].value.valor_real;
-                printf("Valor variable: %f\n", value);
-            }
-            if(strcmp(tipo,"bool") == 0){
-                int value = symbolTable[index].value.valor_bool;
-                printf("Valor variable: %s\n", value ? "true" : "false");
-            }
-            if(strcmp(tipo,"string") == 0){
-                char* value = symbolTable[index].value.str;
-                printf("Valor variable: %s\n", value);
-            }
-        }
         printf("Instrucción de impresión\n");
-    }
-    | PRINT LPAREN expr_string RPAREN SEMICOLON
-    {
-        printf("Instrucción de impresión: %s\n",$3);
     }
     ;
 
@@ -292,7 +241,6 @@ if_statement:
 while_statement:
     MIENTRAS LPAREN expr RPAREN LCURLYBR statements RCURLYBR
     ;
-
 
 plus_statement:
     IDENTIFIER ASIGNACION expr_int PLUS expr_int SEMICOLON {
@@ -348,16 +296,11 @@ divide_statement:
     }
     | IDENTIFIER ASIGNACION expr_float DIVIDE expr_float SEMICOLON {
         printf("division: %f\n", $3/$5);
-    }
-
-//conversion_statement:
- 
-
-
+    }  
 
 //hasta aqui bien. | expr CONVERTIR type 
 expr:
-     expr_int PLUS expr_int SEMICOLON { printf("suma\n"); }
+    expr_int PLUS expr_int { printf("suma: %f\n", $1+$3); }
     | expr MINUS expr { printf("resta\n"); }
     | expr MULTIPLY expr { printf("multiplicacion\n"); }
     | expr DIVIDE expr { printf("division\n"); }
@@ -370,7 +313,8 @@ expr:
     | expr LOGICAL_AND expr { printf("and\n"); }
     | expr LOGICAL_OR expr { printf("or\n"); }
     | expr LOGICAL_NOT { printf("not\n"); }
- 
+    | CONVERTIR LPAREN expr_id COMMA UNIDAD RPAREN 
+    { printf("Conversión de unidad: %s a %s\n", $3, $5); }
     | LPAREN expr RPAREN
     | expr_id
     | NUMBER
@@ -388,26 +332,12 @@ increment_statement:
         printf("Instrucción de incremento: %s\n", $1);
     }
     ;
-
 for_statement:
-    PARA LPAREN for_init SEMICOLON for_condition SEMICOLON for_update RPAREN LCURLYBR statements RCURLYBR
+    PARA LPAREN assignment_statement SEMICOLON expr SEMICOLON increment_statement RPAREN LCURLYBR statements RCURLYBR
     {
         printf("Instrucción PARA con inicialización, condición y actualización\n");
     }
     ;
-
-for_init:
-    assignment_statement
-    ;
-
-for_condition:
-    expr
-    ;
-
-for_update:
-    increment_statement
-    ;
-
 
 %%
 
@@ -416,7 +346,6 @@ void yyerror(const char *s) {
 }
 
 int main(int argc, char **argv) {
-  
   yyparse();
   return 0;
 }
