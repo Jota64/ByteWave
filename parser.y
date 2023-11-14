@@ -293,18 +293,50 @@ while_statement:
     MIENTRAS LPAREN expr RPAREN LCURLYBR statements RCURLYBR
     ;
 
-
+//PENDIENTE VALIDACION QUE LA VARIABLE TENGA EL TIPO CORRECTO
 plus_statement:
     IDENTIFIER ASIGNACION expr_int PLUS expr_int SEMICOLON {
+        int index = findSymbol($1);
+        printf("index: %i\n",index);
+         if(index == -1){
+            yyerror("La variable no se encuentra declarada");
+            exit(1);
+        }else{
+            symbolTable[index].value.valor_entero = $3+$5;
+        }
         printf("suma: %i\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_int PLUS expr_float SEMICOLON {
+        int index = findSymbol($1);
+        printf("index: %i\n",index);
+         if(index == -1){
+            yyerror("La variable no se encuentra declarada");
+            exit(1);
+        }else{
+            symbolTable[index].value.valor_real = $3+$5;
+        }
         printf("suma: %f\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_float PLUS expr_int SEMICOLON {
+        int index = findSymbol($1);
+        printf("index: %i\n",index);
+         if(index == -1){
+            yyerror("La variable no se encuentra declarada");
+            exit(1);
+        }else{
+            symbolTable[index].value.valor_real = $3+$5;
+        }
         printf("suma: %f\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_float PLUS expr_float SEMICOLON {
+        int index = findSymbol($1);
+        printf("index: %i\n",index);
+         if(index == -1){
+            yyerror("La variable no se encuentra declarada");
+            exit(1);
+        }else{
+            symbolTable[index].value.valor_real = $3+$5;
+        }
         printf("suma: %f\n", $3+$5);
     }
 

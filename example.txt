@@ -11,11 +11,11 @@ a = 100; // a vale 100 metros
 //b = 0.5; // b vale 0.5 kilómetros
 c = false; // c vale verdadero
 //d = "ByteWave"; // d vale "ByteWave"
-//a = 10.1+1.1;
+a = 10+1;
 
 
 // Se realizan algunas conversiones entre unidades usando la función CONVERTIR
-a = CONVERTIR(a, cm); // a se convierte a centímetros
+//a = CONVERTIR(a, cm); // a se convierte a centímetros
 //b = CONVERTIR(b, m); // b se convierte a metros
 
 // Se muestran los valores de las variables convertidas
