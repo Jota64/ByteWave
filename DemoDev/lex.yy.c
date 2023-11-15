@@ -442,9 +442,9 @@ static char *yy_last_accepting_cpos;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "lexerDemo.l"
+#line 1 "lexer.l"
 #define INITIAL 0
-#line 2 "lexerDemo.l"
+#line 2 "lexer.l"
 
 #include "parser.tab.h" // Archivo de encabezado generado por Bison
 #include <stdio.h>
@@ -603,7 +603,7 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 13 "lexerDemo.l"
+#line 13 "lexer.l"
 
 
 #line 610 "lex.yy.c"
@@ -691,217 +691,217 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 15 "lexerDemo.l"
+#line 15 "lexer.l"
 { printf("\n VAR (%s)", yytext); return VAR; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 16 "lexerDemo.l"
+#line 16 "lexer.l"
 { yylval.str = strdup(yytext); printf("\n INT (%s)", yytext);return INT; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 17 "lexerDemo.l"
+#line 17 "lexer.l"
 { yylval.str = strdup(yytext); printf("\n FLOAT (%s)", yytext);return FLOAT; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 18 "lexerDemo.l"
+#line 18 "lexer.l"
 { yylval.str = strdup(yytext); printf("\n BOOL (%s)", yytext);return BOOL; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "lexerDemo.l"
+#line 19 "lexer.l"
 { yylval.str = strdup(yytext); printf("\n STRING (%s)", yytext);return STRING;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 20 "lexerDemo.l"
+#line 20 "lexer.l"
 { printf("\n UNIDAD (%s)", yytext); yylval.str = strdup(yytext); return UNIDAD; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 22 "lexerDemo.l"
+#line 22 "lexer.l"
 { printf("\n PLUS (%s)", yytext); return PLUS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 23 "lexerDemo.l"
+#line 23 "lexer.l"
 { printf("\n MINUS (%s)", yytext); return MINUS; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 24 "lexerDemo.l"
+#line 24 "lexer.l"
 { printf("\n MULTIPLY (%s)", yytext); return MULTIPLY; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 25 "lexerDemo.l"
+#line 25 "lexer.l"
 { printf("\n DIVIDE (%s)", yytext); return DIVIDE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 26 "lexerDemo.l"
+#line 26 "lexer.l"
 { printf("\n LESS_THAN (%s)", yytext); return LESS_THAN; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 27 "lexerDemo.l"
+#line 27 "lexer.l"
 { printf("\n GREATER_THAN (%s)", yytext);  return GREATER_THAN; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 28 "lexerDemo.l"
+#line 28 "lexer.l"
 { printf("\n LESS_THAN_OR_EQUAL (%s)", yytext);  return LESS_THAN_OR_EQUAL;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 29 "lexerDemo.l"
+#line 29 "lexer.l"
 { printf("\n GREATER_THAN_OR_EQUAL (%s)", yytext); return GREATER_THAN_OR_EQUAL;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 30 "lexerDemo.l"
+#line 30 "lexer.l"
 { printf("\n EQUAL (%s)", yytext); return EQUAL; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 31 "lexerDemo.l"
+#line 31 "lexer.l"
 { printf("\n ASIGNACION (%s)", yytext);  return ASIGNACION;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 32 "lexerDemo.l"
+#line 32 "lexer.l"
 { printf("\n NOT_EQUAL (%s)", yytext);  return NOT_EQUAL; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 33 "lexerDemo.l"
+#line 33 "lexer.l"
 { printf("\n LOGICAL_AND (%s)", yytext);  return LOGICAL_AND; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 34 "lexerDemo.l"
+#line 34 "lexer.l"
 { printf("\n LOGICAL_OR (%s)", yytext);  return LOGICAL_OR; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 35 "lexerDemo.l"
+#line 35 "lexer.l"
 { printf("\n LOGICAL_NOT (%s)", yytext);  return LOGICAL_NOT; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 37 "lexerDemo.l"
+#line 37 "lexer.l"
 {  yylval.str = strdup(yytext); return V_STRING; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 39 "lexerDemo.l"
+#line 39 "lexer.l"
 { printf("\n CONVERTIR (%s)", yytext);  return CONVERTIR;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 41 "lexerDemo.l"
+#line 41 "lexer.l"
 { printf("\n LPARENT (%s)", yytext); return LPAREN;} 
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 42 "lexerDemo.l"
+#line 42 "lexer.l"
 { printf("\n RPARENT (%s)", yytext); return RPAREN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 43 "lexerDemo.l"
+#line 43 "lexer.l"
 { printf("\n SEMICOLON (%s) \n", yytext); return SEMICOLON; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 44 "lexerDemo.l"
+#line 44 "lexer.l"
 { printf("\n COMMA (%s)", yytext); return COMMA; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 45 "lexerDemo.l"
+#line 45 "lexer.l"
 { printf("\n LCURLYBR (%s)", yytext); return LCURLYBR; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 46 "lexerDemo.l"
+#line 46 "lexer.l"
 { printf("\n RCURLYBR (%s)", yytext); return RCURLYBR; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 48 "lexerDemo.l"
+#line 48 "lexer.l"
 { printf("\n PARA (%s)", yytext);  return PARA;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 49 "lexerDemo.l"
+#line 49 "lexer.l"
 { printf("\n SI (%s)", yytext); return SI;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 50 "lexerDemo.l"
+#line 50 "lexer.l"
 { printf("\n SINO (%s)", yytext);  return SINO;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 51 "lexerDemo.l"
+#line 51 "lexer.l"
 { printf("\n MIENTRAS (%s)", yytext); return MIENTRAS;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 52 "lexerDemo.l"
+#line 52 "lexer.l"
 { printf("\n PRINT (%s)", yytext);  return PRINT;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 54 "lexerDemo.l"
+#line 54 "lexer.l"
 {  yylval.valor_real = atof(yytext); printf("\n REAL (%s)", yytext);return REAL; } // Números reales
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 55 "lexerDemo.l"
+#line 55 "lexer.l"
 {  yylval.valor_entero = atoi(yytext); printf("\n NUMBER (%s)", yytext);return NUMBER; } // Números enteros
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 57 "lexerDemo.l"
+#line 57 "lexer.l"
 { yylval.valor_bool = 1; printf("\n V_BOOL (%s)", yytext);return V_BOOL; } // Reconoce el valor verdadero
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 58 "lexerDemo.l"
+#line 58 "lexer.l"
 { yylval.valor_bool = 0; printf("\n V_BOOL (%s)", yytext);return V_BOOL; } // Reconoce el valor falso
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 61 "lexerDemo.l"
+#line 61 "lexer.l"
 { printf("\n IDENTIFIER (%s)", yytext); yylval.str = strdup(yytext); return IDENTIFIER; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 63 "lexerDemo.l"
+#line 63 "lexer.l"
 ; // Comentario de una línea
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 64 "lexerDemo.l"
+#line 64 "lexer.l"
 ; // Comentario multilínea
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 66 "lexerDemo.l"
+#line 66 "lexer.l"
 ; // Ignorar espacios en blanco y saltos de línea
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 67 "lexerDemo.l"
+#line 67 "lexer.l"
 { fprintf(stderr, "Error: Carácter no válido: %s\n", yytext); }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 69 "lexerDemo.l"
+#line 69 "lexer.l"
 ECHO;
 	YY_BREAK
 #line 908 "lex.yy.c"
@@ -1790,7 +1790,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 69 "lexerDemo.l"
+#line 69 "lexer.l"
 
 /*
 int main() {

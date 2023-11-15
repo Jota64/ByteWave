@@ -1,38 +1,28 @@
 // Este es un programa en ByteWave que realiza algunas operaciones con unidades y sistemas numéricos
 // Se declaran algunas variables con sus tipos y unidades
-var HoraServidor int h; // a es una variable entera con unidad metro
+var a int m; // a es una variable entera con unidad metro
 var b float km; // b es una variable flotante con unidad kilómetro
 var c bool unit; // c es una variable booleana sin unidad (para declarar variables sin unidad ponemos unit)
 var d string unit; // d es una variable de cadena de caracteres sin unidad 
-//var c string m; // VARIABLE PARA PROBAR QUE NO SE PUEDEN DUPLICAR VARIABLES
 
 // Se asignan valores a las variables
-HoraServidor = 100; // a vale 100 metros
+a = 100; // a vale 100 metros
 b = 0.5; // b vale 0.5 kilómetros
-c = false; // c vale verdadero
+c = true; // c vale verdadero
 d = "ByteWave"; // d vale "ByteWave"
-HoraServidor = 10+1;
-print(HoraServidor);
-HoraServidor = 10-1;
-print(HoraServidor);
-HoraServidor = 10*10;
-print(HoraServidor);
-//a++;
 
 // Se realizan algunas conversiones entre unidades usando la función CONVERTIR
-HoraServidor = CONVERTIR(HoraServidor, min); // a se convierte a centímetros
-//b = CONVERTIR(b, m); // b se convierte a metros
+a = CONVERTIR(a, cm); // a se convierte a centímetros
+b = CONVERTIR(b, m); // b se convierte a metros
 
 // Se muestran los valores de las variables convertidas
-print(HoraServidor); // imprime 10000
-print("Prueba de impresion");
+print(a); // imprime 10000
 print(b); // imprime 500
 
 
 // Este es un programa en ByteWave que usa condicionales
 var x int unit; // se declara una variable entera x
 x = 10; // se asigna el valor 10 a x
-print(x);
 si (x > 0) { // se evalúa si x es mayor que 0
   print("x es positivo"); // se imprime "x es positivo" si la condición es verdadera
 } sino { // se usa el sino para el caso contrario
