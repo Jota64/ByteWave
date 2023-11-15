@@ -8,7 +8,6 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <algorithm>
 
 using namespace std;
 
@@ -17,11 +16,10 @@ int yylex(void);
 
 std::map<std::string, std::vector<std::string>> units;
 std::map<std::string, std::string> categories;
-std::map<std::string, double> conversiones;
 
 void inicializa(){
 
-    units["Longitud"] = {"m", "km", "cm", "mm", "pm", "nm", "mi", "yd", "ft", "in"};
+    units["Longitud"] = {"m", "km", "cm", "mm", "µm", "nm", "mi", "yd", "ft", "in"};
     units["Masa"] = {"kg", "g", "mg", "µg", "t", "lb", "oz"};
     units["Volumen"] = {"m3", "L", "mL", "gal", "qt", "pt", "floz"};
     units["Tiempo"] = {"s", "min", "h", " d", "wk", "mo", "yr"};
@@ -32,38 +30,13 @@ void inicializa(){
     // Creamos un nuevo map donde la clave es una string (la unidad de medida)
     // y el valor es una string (la categoría de la unidad de medida)
 
-    for (auto &category : units){
-        for (auto &unit : category.second){
+    for (auto &category : units)
+    {
+        for (auto &unit : category.second)
+        {
             categories[unit] = category.first;
         }
     }
-
-    conversiones = {
-    {"m", 1.0},
-    {"km", 1000.0},
-    {"cm", 0.01},
-    {"mm", 0.001},
-    {"pm", 1e-6},
-    {"nm", 1e-9},
-    {"mi", 1609.34},
-    {"yd", 0.9144},
-    {"ft", 0.3048},
-    {"in", 0.0254},
-    {"s", 1.0},
-    {"min", 60.0},
-    {"h", 3600.0},
-    {"d", 86400.0},
-    {"wk", 604800.0},
-    {"mo", 2628000.0},
-    {"yr", 31536000.0},
-    {"kg", 1.0},
-    {"g", 0.001},
-    {"mg", 1e-6},
-    {"pg", 1e-9},
-    {"t", 1000.0},
-    {"lb", 0.453592},
-    {"oz", 0.0283495}
-    };
 }
 
 struct SymbolEntry {
@@ -91,37 +64,7 @@ int findSymbol(char *name) {
     return -1; // La variable no existe en la tabla de símbolos.
 }
 
-void convertUnit(char* nameVar, char* unitDest){
-    int index = findSymbol(nameVar);
-    
-    if(index == -1){
-        yyerror("La variable no se encuentra declarada");
-        exit(1);
-    }else{
-        string type = symbolTable[index].type;
-        string unidadOrigen = symbolTable[index].unit[1];
-        if(categories[unidadOrigen] == categories[unitDest] ){
-            float value;
-            if(type == "int"){
-                value = symbolTable[index].value.valor_entero;
-            }else if(type == "float"){
-                value = symbolTable[index].value.valor_real;
-            }
-
-            double valorEnBase = value * conversiones[unidadOrigen];
-            double valorConvertido = valorEnBase / conversiones[unitDest];
-            symbolTable[index].unit[1]=unitDest;
-            if(type == "int"){
-                symbolTable[index].value.valor_entero = static_cast<int>(valorConvertido);
-            }else if(type == "float"){
-                symbolTable[index].value.valor_real = valorConvertido;
-            }
-        }else{
-            yyerror("Las unidades no son consistentes.");
-            exit(1);
-        }
-
-    }
+void convertUnit(char* unitOrigin, char* unitDest, char* nameVar){
 
 }
 
@@ -204,6 +147,7 @@ var_declaration:
     VAR IDENTIFIER type UNIDAD SEMICOLON 
     { 
         int index = findSymbol($2);
+        printf("index: %i\n",index);
         if(index == -1){
             if(symbolCount<MAX_SYMBOLS){
                 symbolTable[symbolCount].name = strdup($2);
@@ -227,6 +171,7 @@ var_declaration:
             yyerror("La variable ya existe");
             exit(1);
         }
+        printf("Declaración de variable: %s - tipo  %s - unidad %s\n", $2, $3, $4 ? $4: "sin unidad"); 
     }
     ;
 
@@ -242,6 +187,7 @@ assignment_statement:
     IDENTIFIER ASIGNACION expr_int SEMICOLON 
     { 
         int index = findSymbol($1);
+        printf("index: %i\n",index);
         if(index == -1){
             if(symbolCount<MAX_SYMBOLS){
                 symbolTable[symbolCount].name = strdup($1);
@@ -257,11 +203,13 @@ assignment_statement:
         } else {
             symbolTable[index].value.valor_entero = $3;
         }
+        printf("Asignacion de variable: %s igual %i \n", $1, $3); 
     }
     
     | IDENTIFIER ASIGNACION expr_float SEMICOLON
         { 
             int index = findSymbol($1);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -277,11 +225,13 @@ assignment_statement:
             } else {
                 symbolTable[index].value.valor_real = $3;
             }
+            printf("Asignacion de variable: %s igual %f \n", $1, $3); 
         }
 
     | IDENTIFIER ASIGNACION expr_string SEMICOLON
         { 
             int index = findSymbol($1);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -297,11 +247,13 @@ assignment_statement:
             } else {
                 symbolTable[index].value.str = $3;
             }
+            printf("Asignacion de variable: %s igual %s \n", $1, $3); 
         }
 
     | IDENTIFIER ASIGNACION expr_bool SEMICOLON
         { 
             int index = findSymbol($1);
+            printf("index: %i\n",index);
             if(index == -1){
                 if(symbolCount<MAX_SYMBOLS){
                     symbolTable[symbolCount].name = strdup($1);
@@ -317,11 +269,31 @@ assignment_statement:
             } else {
                 symbolTable[index].value.valor_bool = $3;
             }
+            printf("Asignacion de variable: %s igual %i \n", $1, $3);
         }
-
     | IDENTIFIER ASIGNACION CONVERTIR LPAREN IDENTIFIER COMMA UNIDAD RPAREN SEMICOLON
     {
-        convertUnit($5,$7);
+        int index = findSymbol($1);
+        printf("index: %i\n",index);
+        if(index > -1){
+            char* tipo = symbolTable[index].type;
+            printf("Tipo variable: %s\n", tipo);
+            if(strcmp(tipo,"int") == 0){
+                int value = symbolTable[index].value.valor_entero;
+                printf("Valor variable: %i\n", value);
+            }
+        }
+        int index2 = findSymbol($5);
+        printf("index: %i\n",index2);
+        if(index2 > -1){
+            char* tipo = symbolTable[index2].type;
+            printf("Tipo variable: %s\n", tipo);
+            if(strcmp(tipo,"int") == 0){
+                int value = symbolTable[index2].value.valor_entero;
+                printf("Valor variable: %i\n", value);
+            }
+        }
+        printf("Conversión de unidad: %s a %s\n", $1, $7); 
     } 
     ;
 
@@ -342,52 +314,50 @@ print_statement:
     PRINT LPAREN IDENTIFIER RPAREN SEMICOLON
     {
         int index = findSymbol($3);
+        printf("index: %i\n",index);
         if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             char* tipo = symbolTable[index].type;
+            printf("Tipo variable: %s\n", tipo);
             if(strcmp(tipo,"int") == 0){
                 int value = symbolTable[index].value.valor_entero;
                 string categoryUnit = symbolTable[index].unit[0];
                 string unitCategory = symbolTable[index].unit[1];
-                cout << categoryUnit << " " << $3 << ": " << value << unitCategory << endl;
+                cout << "Valor variable: " << value << "; " << categoryUnit << " ; " << unitCategory << endl;
             }
             if(strcmp(tipo,"float") == 0){
                 float value = symbolTable[index].value.valor_real;
                 string categoryUnit = symbolTable[index].unit[0];
                 string unitCategory = symbolTable[index].unit[1];
-                cout << categoryUnit << " " << $3 << ": " << value << unitCategory << endl;
+
+                cout << "Valor variable: " << value << "; " << categoryUnit << " ; " << unitCategory << endl;
             }
             if(strcmp(tipo,"bool") == 0){
                 int value = symbolTable[index].value.valor_bool;
                 string categoryUnit = symbolTable[index].unit[0];
                 string unitCategory = symbolTable[index].unit[1];
-                cout << categoryUnit << " " << $3 << ": " << (value ? "false" : "true") << unitCategory << endl;
+                cout << "Valor variable: " << value << "; " << categoryUnit << " ; " << unitCategory << endl;
             }
             if(strcmp(tipo,"string") == 0){
                 char* value = symbolTable[index].value.str;
                 string categoryUnit = symbolTable[index].unit[0];
                 string unitCategory = symbolTable[index].unit[1];
-                cout << categoryUnit << " " << $3 << ": " << value << endl;
+                cout << "Valor variable: " << value << "; " << categoryUnit << " ; " << unitCategory << endl;
             }
         }
+        printf("Instrucción de impresión\n");
     }
     | PRINT LPAREN expr_string RPAREN SEMICOLON
     {
-        string printText = $3;
-        replace(printText.begin(), printText.end(), '"', ' ');
-        cout << printText << endl;
+        printf("Instrucción de impresión: %s\n",$3);
     }
     ;
 
 if_statement:
-    SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR {
-        cout << "hola 1" << endl;
-    }
-    | SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR SINO LCURLYBR statements RCURLYBR{
-        cout << "hola 2" << endl;
-    }
+    SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR
+    | SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR SINO LCURLYBR statements RCURLYBR
     ;
 
 while_statement:
@@ -398,153 +368,185 @@ while_statement:
 plus_statement:
     IDENTIFIER ASIGNACION expr_int PLUS expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_entero = $3+$5;
         }
+        printf("suma: %i\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_int PLUS expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3+$5;
         }
+        printf("suma: %f\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_float PLUS expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3+$5;
         }
+        printf("suma: %f\n", $3+$5);
     }
     | IDENTIFIER ASIGNACION expr_float PLUS expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3+$5;
         }
+        printf("suma: %f\n", $3+$5);
     }
 
 minus_statement:
     IDENTIFIER ASIGNACION expr_int MINUS expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_entero = $3-$5;
         }
+        printf("resta: %i\n", $3-$5);
     }
     | IDENTIFIER ASIGNACION expr_int MINUS expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3-$5;
         }
+        printf("resta: %f\n", $3-$5);
     }
     | IDENTIFIER ASIGNACION expr_float MINUS expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3-$5;
         }
+        printf("resta: %f\n", $3-$5);
     }
     | IDENTIFIER ASIGNACION expr_float MINUS expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3-$5;
         }
+        printf("resta: %f\n", $3-$5);
     }
 
 multiply_statement:
     IDENTIFIER ASIGNACION expr_int MULTIPLY expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_entero = $3*$5;
         }
+        printf("multiplicacion: %i\n", $3*$5);
     }
     | IDENTIFIER ASIGNACION expr_int MULTIPLY expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3*$5;
         }
+        printf("multiplicacion: %f\n", $3*$5);
     }
     | IDENTIFIER ASIGNACION expr_float MULTIPLY expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3*$5;
         }
+        printf("multiplicacion: %f\n", $3*$5);
     }
     | IDENTIFIER ASIGNACION expr_float MULTIPLY expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3*$5;
         }
+        printf("multiplicacion: %f\n", $3*$5);
     }   
 
 divide_statement:
     IDENTIFIER ASIGNACION expr_int DIVIDE expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3/$5;
         }
+        printf("division: %i\n", $3/$5);
     }
     | IDENTIFIER ASIGNACION expr_int DIVIDE expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3/$5;
         }
+        printf("division: %f\n", $3/$5);
     }
     | IDENTIFIER ASIGNACION expr_float DIVIDE expr_int SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3/$5;
         }
+        printf("division: %f\n", $3/$5);
     }
     | IDENTIFIER ASIGNACION expr_float DIVIDE expr_float SEMICOLON {
         int index = findSymbol($1);
+        printf("index: %i\n",index);
          if(index == -1){
             yyerror("La variable no se encuentra declarada");
             exit(1);
         }else{
             symbolTable[index].value.valor_real = $3/$5;
         }
+        printf("division: %f\n", $3/$5);
     }
 
 //conversion_statement:
@@ -560,9 +562,7 @@ expr:
     | expr DIVIDE expr { printf("division\n"); }
     | expr ASIGNACION expr  { printf("asignacion\n"); }
     | expr LESS_THAN expr { printf("menor-que\n"); }
-    | IDENTIFIER GREATER_THAN expr_int { 
-        
-        printf("expresion (mayor-que), %s, %s\n", $1,$3); }
+    | expr GREATER_THAN expr { printf("expresion (mayor-que)\n"); }
     | expr LESS_THAN_OR_EQUAL expr { printf("menor_igual\n"); }
     | expr GREATER_THAN_OR_EQUAL expr { printf("mayor_igual\n"); }
     | expr NOT_EQUAL expr { printf("diferente_a\n"); }
@@ -581,22 +581,10 @@ expr:
 expr_id:
     IDENTIFIER
     ;
-
 increment_statement:
-    IDENTIFIER PLUS PLUS SEMICOLON{
-        int index = findSymbol($1);
-         if(index == -1){
-            yyerror("La variable no se encuentra declarada");
-            exit(1);
-        }else{
-            char* tipo = symbolTable[index].type;
-            if(strcmp(tipo,"int") == 0){
-                symbolTable[index].value.valor_entero = symbolTable[index].value.valor_entero+1;
-            }
-            if(strcmp(tipo,"float") == 0){
-                symbolTable[index].value.valor_real = symbolTable[index].value.valor_real+1;
-            }
-        }
+    IDENTIFIER PLUS PLUS SEMICOLON
+    {
+        printf("Instrucción de incremento: %s\n", $1);
     }
     ;
 
