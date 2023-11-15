@@ -385,7 +385,7 @@ if_statement:
     SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR {
         cout << "hola 1" << endl;
     }
-    | SI LPAREN expr RPAREN LCURLYBR statements RCURLYBR SINO LCURLYBR statements RCURLYBR{
+    | SI LPAREN IDENTIFIER GREATER_THAN expr_int RPAREN LCURLYBR statements RCURLYBR SINO LCURLYBR statements RCURLYBR{
         cout << "hola 2" << endl;
     }
     ;
@@ -562,7 +562,7 @@ expr:
     | expr LESS_THAN expr { printf("menor-que\n"); }
     | IDENTIFIER GREATER_THAN expr_int { 
         
-        printf("expresion (mayor-que), %s, %s\n", $1,$3); }
+        printf("expresion (mayor-que), %s, %i\n", $1,$3); }
     | expr LESS_THAN_OR_EQUAL expr { printf("menor_igual\n"); }
     | expr GREATER_THAN_OR_EQUAL expr { printf("mayor_igual\n"); }
     | expr NOT_EQUAL expr { printf("diferente_a\n"); }

@@ -1,30 +1,30 @@
 // Este es un programa en ByteWave que realiza algunas operaciones con unidades y sistemas numéricos
 // Se declaran algunas variables con sus tipos y unidades
-var a int h; // a es una variable entera con unidad metro
+var HoraServidor int h; // a es una variable entera con unidad metro
 var b float km; // b es una variable flotante con unidad kilómetro
 var c bool unit; // c es una variable booleana sin unidad (para declarar variables sin unidad ponemos unit)
 var d string unit; // d es una variable de cadena de caracteres sin unidad 
 //var c string m; // VARIABLE PARA PROBAR QUE NO SE PUEDEN DUPLICAR VARIABLES
 
 // Se asignan valores a las variables
-a = 100; // a vale 100 metros
+HoraServidor = 100; // a vale 100 metros
 b = 0.5; // b vale 0.5 kilómetros
 c = false; // c vale verdadero
 d = "ByteWave"; // d vale "ByteWave"
-a = 10+1;
-print(a);
-a = 10-1;
-print(a);
-a = 10*10;
-print(a);
+HoraServidor = 10+1;
+print(HoraServidor);
+HoraServidor = 10-1;
+print(HoraServidor);
+HoraServidor = 10*10;
+print(HoraServidor);
 //a++;
 
 // Se realizan algunas conversiones entre unidades usando la función CONVERTIR
-a = CONVERTIR(a, min); // a se convierte a centímetros
+HoraServidor = CONVERTIR(HoraServidor, min); // a se convierte a centímetros
 //b = CONVERTIR(b, m); // b se convierte a metros
 
 // Se muestran los valores de las variables convertidas
-print(a); // imprime 10000
+print(HoraServidor); // imprime 10000
 print("Prueba de impresion");
 print(b); // imprime 500
 
